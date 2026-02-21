@@ -13,7 +13,7 @@ function App() {
   return (
     <>
       <Navbar />
-      <main>
+      <main className="overflow-x-hidden">
         <Hero />
         <HowItWorks />
         <ForClubOwners />

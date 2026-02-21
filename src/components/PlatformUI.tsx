@@ -41,8 +41,8 @@ export default function PlatformUI() {
         </AnimatePresence>
       </div>
 
-      {/* Full-width slider */}
-      <div className="w-full h-[90vh] min-h-[380px] relative">
+      {/* Слайдер скриншотов — уменьшенная высота и макс. ширина */}
+      <div className="w-full max-w-5xl mx-auto h-[200px] relative">
         <AnimatePresence mode="wait" initial={false}>
           <motion.div
             key={card.id}
@@ -50,12 +50,12 @@ export default function PlatformUI() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.4 }}
-            className="absolute inset-0 w-full h-full"
+            className="absolute inset-0 w-full h-full overflow-hidden md:rounded-xl md:border md:border-[var(--color-border)] md:shadow-xl"
           >
             <img
               src={card.image}
               alt={card.title}
-              className="w-full h-full object-cover object-center"
+              className="w-full h-full object-contain object-center bg-transparent md:bg-[var(--color-surface)]"
             />
           </motion.div>
         </AnimatePresence>

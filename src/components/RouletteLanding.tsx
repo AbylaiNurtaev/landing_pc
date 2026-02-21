@@ -119,6 +119,20 @@ const LANDING_ROULETTE_CSS = `
   border-bottom: 22px solid var(--color-neon-cyan);
   filter: drop-shadow(0 -2px 8px rgba(0, 245, 255, 0.5));
 }
+@media (max-width: 768px) {
+  .landing-roulette-wrap .landing-cs-roulette-pointer::before {
+    top: calc(50% - 84px - 24px);
+    border-left: 14px solid transparent;
+    border-right: 14px solid transparent;
+    border-top: 16px solid var(--color-neon-cyan);
+  }
+  .landing-roulette-wrap .landing-cs-roulette-pointer::after {
+    top: calc(50% + 84px + 10px);
+    border-left: 14px solid transparent;
+    border-right: 14px solid transparent;
+    border-bottom: 16px solid var(--color-neon-cyan);
+  }
+}
 .landing-roulette-wrap .landing-cs-roulette-track {
   position: relative;
   width: 100%;
@@ -183,6 +197,7 @@ const LANDING_ROULETTE_CSS = `
 }
 @media (max-width: 768px) {
   .landing-roulette-wrap .landing-roulette-section { height: 260px; min-height: 220px; }
+  .landing-roulette-wrap .landing-cs-roulette-container { padding: 12px 0; }
   .landing-roulette-wrap .landing-cs-prize-item { width: 280px; height: 168px; }
   .landing-roulette-wrap .landing-cs-prize-placeholder { font-size: 36px; }
 }

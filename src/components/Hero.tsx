@@ -9,7 +9,7 @@ const SEGMENTS = [
   'Скидка 20%',
   '+2 часа',
   'Бонус 200₽',
-  'Двойные баллы',
+  'Баллы',
 ]
 
 export default function Hero() {
