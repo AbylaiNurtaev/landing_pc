@@ -1,0 +1,278 @@
+/**
+ * Самодостаточный компонент рулетки для лендинга.
+ * Всё в одном файле: логика, демо-призы, стили. Рулетка просто крутится (idle).
+ */
+import { useState, useEffect, useRef } from 'react'
+import priz1 from '../assets/priz1.jpg'
+import priz2 from '../assets/priz2.jpg'
+import priz3 from '../assets/priz3.jpg'
+import prize5 from '../assets/prize5.png'
+import priz6 from '../assets/priz6.png'
+import priz7 from '../assets/priz7.png'
+import priz8 from '../assets/priz8.jpg'
+
+// ——— Константы ———
+const PRIZE_CARD_WIDTH = 400
+const PRIZE_GAP = 24
+const PRIZE_WIDTH = PRIZE_CARD_WIDTH + PRIZE_GAP
+const IDLE_SPEED_PX = 15.5
+const ROULETTE_MIN_COPIES = 50
+const ROULETTE_REPLENISH_THRESHOLD = 25
+const ROULETTE_REPLENISH_COUNT = 25
+
+// ——— Демо-призы из assets ———
+interface DemoPrize {
+  id: string
+  name: string
+  slotIndex: number
+  probability: number
+  image: string
+}
+const DEMO_PRIZES: DemoPrize[] = [
+  { id: '1', name: 'Приз 1', slotIndex: 0, probability: 0.03, image: priz1 },
+  { id: '2', name: 'Приз 2', slotIndex: 1, probability: 0.05, image: priz2 },
+  { id: '3', name: 'Приз 3', slotIndex: 2, probability: 0.08, image: priz3 },
+  { id: '5', name: 'Приз 5', slotIndex: 3, probability: 0.12, image: prize5 },
+  { id: '6', name: 'Приз 6', slotIndex: 4, probability: 0.15, image: priz6 },
+  { id: '7', name: 'Приз 7', slotIndex: 5, probability: 0.18, image: priz7 },
+  { id: '8', name: 'Приз 8', slotIndex: 6, probability: 0.2, image: priz8 },
+]
+
+type PrizeTier = 'red' | 'purple' | 'green' | 'blue' | 'gray'
+
+function getPrizeTier(prize: { probability?: number }): PrizeTier {
+  const pct = (prize.probability ?? 0) * 100
+  if (pct < 5) return 'red'
+  if (pct < 10) return 'purple'
+  if (pct < 15) return 'green'
+  if (pct <= 20) return 'blue'
+  return 'gray'
+}
+
+// ——— Стили (цвета лендинга: graphite, neon-cyan, neon-orange, без фона) ———
+const LANDING_ROULETTE_CSS = `
+.landing-roulette-wrap {
+  width: 100%;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  box-sizing: border-box;
+  background: transparent;
+}
+.landing-roulette-wrap .landing-spin-container {
+  width: 100%;
+  max-width: 100%;
+  background: transparent;
+  border-radius: 0;
+  padding: 20px 0;
+  border: none;
+}
+.landing-roulette-wrap .landing-roulette-section {
+  margin: 0;
+  width: 100%;
+  height: 320px;
+  min-height: 280px;
+  position: relative;
+  overflow: hidden;
+}
+.landing-roulette-wrap .landing-cs-roulette-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: transparent;
+  border-radius: 0;
+  padding: 20px 0;
+}
+.landing-roulette-wrap .landing-cs-roulette-pointer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 0;
+  height: 100%;
+  z-index: 10;
+  pointer-events: none;
+}
+.landing-roulette-wrap .landing-cs-roulette-pointer::before,
+.landing-roulette-wrap .landing-cs-roulette-pointer::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent;
+}
+.landing-roulette-wrap .landing-cs-roulette-pointer::before {
+  top: calc(50% - 120px - 30px);
+  border-bottom: none;
+  border-top: 22px solid var(--color-neon-cyan);
+  filter: drop-shadow(0 2px 8px rgba(0, 245, 255, 0.5));
+}
+.landing-roulette-wrap .landing-cs-roulette-pointer::after {
+  top: calc(50% + 120px + 6px);
+  border-top: none;
+  border-bottom: 22px solid var(--color-neon-cyan);
+  filter: drop-shadow(0 -2px 8px rgba(0, 245, 255, 0.5));
+}
+.landing-roulette-wrap .landing-cs-roulette-track {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+.landing-roulette-wrap .landing-cs-roulette-items {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  height: 100%;
+  will-change: transform;
+  padding: 0 20px;
+}
+.landing-roulette-wrap .landing-cs-prize-item {
+  flex-shrink: 0;
+  width: 400px;
+  height: 240px;
+  padding: 12px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+  border: 2px solid rgba(0, 245, 255, 0.25);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.landing-roulette-wrap .landing-cs-prize-item[data-prize-tier="red"] { border-color: rgba(255, 107, 53, 0.6); box-shadow: 0 0 16px rgba(255, 107, 53, 0.2); }
+.landing-roulette-wrap .landing-cs-prize-item[data-prize-tier="purple"] { border-color: rgba(168, 85, 247, 0.5); }
+.landing-roulette-wrap .landing-cs-prize-item[data-prize-tier="green"] { border-color: rgba(0, 245, 255, 0.5); }
+.landing-roulette-wrap .landing-cs-prize-item[data-prize-tier="blue"] { border-color: rgba(0, 245, 255, 0.5); }
+.landing-roulette-wrap .landing-cs-prize-item[data-prize-tier="gray"] { border-color: rgba(255, 255, 255, 0.12); }
+.landing-roulette-wrap .landing-cs-prize-inner {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+}
+.landing-roulette-wrap .landing-cs-prize-placeholder {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  font-size: 48px;
+  font-weight: 700;
+  color: var(--color-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-surface);
+  border-radius: 8px;
+}
+.landing-roulette-wrap .landing-cs-prize-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+}
+@media (max-width: 768px) {
+  .landing-roulette-wrap .landing-roulette-section { height: 260px; min-height: 220px; }
+  .landing-roulette-wrap .landing-cs-prize-item { width: 280px; height: 168px; }
+  .landing-roulette-wrap .landing-cs-prize-placeholder { font-size: 36px; }
+}
+`
+
+export default function RouletteLanding() {
+  const [roulettePrizes] = useState(DEMO_PRIZES)
+  const [rouletteCopies, setRouletteCopies] = useState(ROULETTE_MIN_COPIES)
+  const [scrollPosition, setScrollPosition] = useState(0)
+
+  const rouletteRef = useRef<HTMLDivElement>(null)
+  const idlePositionRef = useRef(0)
+  const idleRafRef = useRef<number | null>(null)
+  const rouletteCopiesRef = useRef(ROULETTE_MIN_COPIES)
+  const roulettePrizesRef = useRef(roulettePrizes)
+
+  rouletteCopiesRef.current = rouletteCopies
+  roulettePrizesRef.current = roulettePrizes
+
+  // Бесконечное медленное движение ленты (idle)
+  useEffect(() => {
+    const prizes = roulettePrizesRef.current
+    if (prizes.length === 0) return
+
+    const oneSetWidth = prizes.length * PRIZE_WIDTH
+    let lastTime = performance.now()
+
+    const tick = () => {
+      const now = performance.now()
+      const dt = Math.min((now - lastTime) / 16, 50)
+      lastTime = now
+      idlePositionRef.current -= IDLE_SPEED_PX * (dt / 16)
+      if (idlePositionRef.current < -oneSetWidth) {
+        idlePositionRef.current += oneSetWidth
+      }
+      const containerWidth = rouletteRef.current?.offsetWidth ?? 0
+      const rightEdge = idlePositionRef.current + containerWidth
+      const copies = rouletteCopiesRef.current
+      if (rightEdge >= (copies - ROULETTE_REPLENISH_THRESHOLD) * oneSetWidth) {
+        rouletteCopiesRef.current = copies + ROULETTE_REPLENISH_COUNT
+        setRouletteCopies(rouletteCopiesRef.current)
+      }
+      setScrollPosition(idlePositionRef.current)
+      idleRafRef.current = requestAnimationFrame(tick)
+    }
+    idleRafRef.current = requestAnimationFrame(tick)
+    return () => {
+      if (idleRafRef.current != null) cancelAnimationFrame(idleRafRef.current)
+    }
+  }, [roulettePrizes.length])
+
+  return (
+    <>
+      <style dangerouslySetInnerHTML={{ __html: LANDING_ROULETTE_CSS }} />
+      <div className="landing-roulette-wrap">
+        <div className="landing-spin-container">
+          <div className="landing-roulette-section">
+            <div className="landing-cs-roulette-container">
+              <div className="landing-cs-roulette-pointer" aria-hidden />
+              <div ref={rouletteRef} className="landing-cs-roulette-track">
+                <div
+                  className="landing-cs-roulette-items"
+                  style={{
+                    transform: `translateX(${scrollPosition}px)`,
+                    transition: 'none',
+                  }}
+                >
+                  {Array.from({ length: rouletteCopies }, () => roulettePrizes)
+                    .flat()
+                    .map((prize, index) => (
+                      <div
+                        key={`${prize.id}-${index}`}
+                        className="landing-cs-prize-item"
+                        data-prize-tier={getPrizeTier(prize)}
+                      >
+                        <div className="landing-cs-prize-inner">
+                          <img
+                            src={prize.image}
+                            alt={prize.name}
+                            className="landing-cs-prize-image"
+                          />
+                        </div>
+                      </div>
+                    ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  )
+}

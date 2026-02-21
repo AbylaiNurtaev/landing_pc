@@ -1,0 +1,88 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Colors */
+  --color-graphite: #0D0D0F;
+  --color-neon-cyan: #00F5FF;
+  --color-neon-orange: #FF6B35;
+  --color-surface: #141416;
+  --color-surface-elevated: #1a1a1d;
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-text: #e8e8ea;
+  --color-text-muted: #9ca3af;
+
+  /* Spacing */
+  --section-py: 6rem; /* 96px / py-24 */
+  --container-px: 1.5rem;
+  --container-max: 1280px;
+
+  /* Typography */
+  --font-heading: 'Orbitron', 'Rajdhani', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+
+  /* Effects */
+  --neon-cyan-glow: 0 0 20px rgba(0, 245, 255, 0.5), 0 0 40px rgba(0, 245, 255, 0.25);
+  --neon-orange-glow: 0 0 20px rgba(255, 107, 53, 0.5), 0 0 40px rgba(255, 107, 53, 0.25);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-graphite);
+  color: var(--color-text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Scanline overlay utility */
+.scanline::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.03) 2px,
+    rgba(0, 0, 0, 0.03) 4px
+  );
+  pointer-events: none;
+}
+
+/* Noise texture */
+.noise::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+/* Neon glow utility class */
+.neon-glow-cyan {
+  box-shadow: var(--neon-cyan-glow);
+}
+
+.neon-glow-orange {
+  box-shadow: var(--neon-orange-glow);
+}
+
+/* Glitch text (optional decorative) */
+@keyframes glitch {
+  0% { transform: translate(0); }
+  20% { transform: translate(-2px, 2px); }
+  40% { transform: translate(2px, -2px); }
+  60% { transform: translate(-2px, -2px); }
+  80% { transform: translate(2px, 2px); }
+  100% { transform: translate(0); }
+}
+
+.glitch:hover {
+  animation: glitch 0.3s ease-in-out;
+}
