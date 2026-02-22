@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { Server, Sliders, ShieldCheck, FileText, Gauge } from 'lucide-react'
+import { Sliders, ShieldCheck, FileText, Gauge } from 'lucide-react'
 
 const TILES = [
   { title: 'защита от накруток', Icon: ShieldCheck },
