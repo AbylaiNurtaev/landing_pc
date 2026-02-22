@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import RouletteLanding from './RouletteLanding'
+import { useCTAModal } from '../context/CTAModalContext'
 
 const SEGMENTS = [
   'Скидка 10%',
@@ -13,9 +14,7 @@ const SEGMENTS = [
 ]
 
 export default function Hero() {
-  const scrollToCTA = () => {
-    document.getElementById('cta')?.scrollIntoView({ behavior: 'smooth' })
-  }
+  const { openCTAModal } = useCTAModal()
 
   return (
     <section className="relative min-h-screen flex flex-col overflow-hidden">
@@ -62,7 +61,7 @@ export default function Hero() {
           </motion.p>
           <motion.button
             type="button"
-            onClick={scrollToCTA}
+            onClick={openCTAModal}
             className="px-8 py-4 rounded-lg font-semibold text-graphite bg-neon-cyan hover:bg-[#00dde6] transition-colors neon-glow-cyan"
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}

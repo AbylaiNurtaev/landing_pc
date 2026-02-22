@@ -41,8 +41,8 @@ export default function PlatformUI() {
         </AnimatePresence>
       </div>
 
-      {/* Слайдер скриншотов — уменьшенная высота и макс. ширина */}
-      <div className="w-full max-w-5xl mx-auto h-[200px] relative">
+      {/* Слайдер скриншотов — высота адаптивная: мобилка компактно, ПК больше */}
+      <div className="w-full max-w-5xl mx-auto h-[200px] md:h-[340px] lg:h-[520px] xl:h-[600px] relative">
         <AnimatePresence mode="wait" initial={false}>
           <motion.div
             key={card.id}

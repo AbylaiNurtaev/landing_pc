@@ -1,9 +1,8 @@
 import { motion } from 'framer-motion'
+import { useCTAModal } from '../context/CTAModalContext'
 
 export default function Navbar() {
-  const scrollToCTA = () => {
-    document.getElementById('cta')?.scrollIntoView({ behavior: 'smooth' })
-  }
+  const { openCTAModal } = useCTAModal()
 
   return (
     <nav
@@ -26,7 +25,7 @@ export default function Navbar() {
         </a>
         <motion.button
           type="button"
-          onClick={scrollToCTA}
+          onClick={openCTAModal}
           className="px-5 py-2.5 rounded-lg font-medium text-graphite bg-neon-cyan hover:bg-[#00dde6] transition-colors shadow-[0_0_20px_rgba(0,245,255,0.4)]"
           whileHover={{ scale: 1.03 }}
           whileTap={{ scale: 0.98 }}
