@@ -39,7 +39,7 @@ export default function FAQ() {
   const [openId, setOpenId] = useState<string | null>(null)
 
   return (
-    <section className="relative py-24 px-4 sm:px-6 lg:px-8 bg-[var(--color-surface)]">
+    <section id="faq" className="relative py-24 px-4 sm:px-6 lg:px-8 bg-[var(--color-surface)]">
       <div className="max-w-2xl mx-auto">
         <motion.h2
           className="font-heading font-bold text-3xl sm:text-4xl text-white text-center mb-12"

@@ -11,7 +11,7 @@ const TILES = [
 
 export default function Transparency() {
   return (
-    <section className="relative py-24 px-4 sm:px-6 lg:px-8 bg-[var(--color-surface)] noise">
+    <section id="transparency" className="relative py-24 px-4 sm:px-6 lg:px-8 bg-[var(--color-surface)] noise">
       <div className="max-w-[var(--container-max)] mx-auto relative z-10">
         <motion.h2
           className="font-heading font-bold text-3xl sm:text-4xl text-white text-center mb-16"

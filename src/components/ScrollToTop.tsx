@@ -29,7 +29,6 @@ export default function ScrollToTop() {
         aria-label="Прокрутить вверх"
         className={`
           fixed bottom-6 right-5 z-50
-          md:hidden
           w-12 h-12 rounded-full
           bg-neon-cyan/90 hover:bg-neon-cyan
           text-graphite

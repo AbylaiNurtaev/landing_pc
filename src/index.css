@@ -32,6 +32,11 @@ html {
   overflow-x: hidden;
 }
 
+/* Отступ при скролле к якорям, чтобы контент не уходил под фиксированный хедер */
+section[id] {
+  scroll-margin-top: 5.5rem;
+}
+
 body {
   font-family: var(--font-body);
   background-color: var(--color-graphite);

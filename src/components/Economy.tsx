@@ -10,7 +10,7 @@ const PROTECTIONS = [
 
 export default function Economy() {
   return (
-    <section className="relative py-24 px-4 sm:px-6 lg:px-8">
+    <section id="economy" className="relative py-24 px-4 sm:px-6 lg:px-8">
       <div className="max-w-[var(--container-max)] mx-auto">
         <motion.h2
           className="font-heading font-bold text-3xl sm:text-4xl text-white text-center mb-12"

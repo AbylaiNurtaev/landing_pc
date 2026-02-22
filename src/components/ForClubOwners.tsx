@@ -46,7 +46,7 @@ export default function ForClubOwners() {
   const content = FEATURE_CONTENT[selectedId]
 
   return (
-    <section className="relative py-24 px-4 sm:px-6 lg:px-8 bg-[var(--color-surface)]">
+    <section id="for-club-owners" className="relative py-24 px-4 sm:px-6 lg:px-8 bg-[var(--color-surface)]">
       <div className="max-w-[var(--container-max)] mx-auto">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           <motion.div

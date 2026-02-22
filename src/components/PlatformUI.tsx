@@ -24,7 +24,7 @@ export default function PlatformUI() {
   }, [])
 
   return (
-    <section className="relative py-24 overflow-hidden">
+    <section id="platform" className="relative py-24 overflow-hidden">
       <div className="max-w-[var(--container-max)] mx-auto px-4 sm:px-6 lg:px-8 mb-12 min-h-[4.5rem] flex items-center justify-center">
         <AnimatePresence mode="wait">
           <motion.p
