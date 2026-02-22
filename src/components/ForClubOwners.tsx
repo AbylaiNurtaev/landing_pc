@@ -1,81 +1,72 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { TrendingUp, BarChart3, Coins, Users } from 'lucide-react'
 import { useCTAModal } from '../context/CTAModalContext'
+import priz3 from '../assets/priz3.jpg'
+import prize5 from '../assets/prize5.png'
+import priz6 from '../assets/priz6.png'
+import plus1hour from '../assets/+1hour.png'
+import sale from '../assets/sale.png'
 
-const FEATURES = [
-  { id: 'economy', title: 'Контроль экономики клуба', Icon: Coins },
-  { id: 'analytics', title: 'Аналитика по спинам (club_id)', Icon: BarChart3 },
-  { id: 'prizes', title: 'Настройка призового фонда', Icon: TrendingUp },
-  { id: 'retention', title: 'Удержание аудитории', Icon: Users },
+const PRIZES = [
+  { id: 'balance', title: 'Бонусы на баланс', description: 'Можно оплатить часть игры.', image: priz6 },
+  { id: 'hours', title: 'Бесплатные часы', description: '30 мин / 1 час / пакеты.', image: plus1hour },
+  { id: 'discounts', title: 'Скидки', description: 'Растут от активности (чем больше играешь, тем выгоднее).', image: sale },
+  { id: 'digital', title: 'Digital-призы', description: 'Промо, скины, подписки (если включено).', image: prize5 },
+  { id: 'rare', title: 'Редкие призы', description: 'Лимитированные награды (редко, но приятно).', image: priz3 },
 ] as const
 
-type FeatureId = (typeof FEATURES)[number]['id']
-
-// Временный контент — замените на нужный текст
-const FEATURE_CONTENT: Record<FeatureId, { paragraph: string; extra?: React.ReactNode }> = {
-  economy: {
-    paragraph: 'Проблема: игроки уходят в конкурирующие клубы. Решение: рулетка лояльности увеличивает возврат и LTV.',
-    extra: (
-      <div className="flex flex-wrap gap-6">
-        <div className="px-6 py-4 rounded-xl bg-[var(--color-surface-elevated)] border border-neon-cyan/20">
-          <div className="text-2xl font-heading font-bold text-neon-cyan" style={{ fontFamily: 'Orbitron, Rajdhani, sans-serif' }}>↑ 34%</div>
-          <div className="text-sm text-[var(--color-text-muted)]">LTV</div>
-        </div>
-        <div className="px-6 py-4 rounded-xl bg-[var(--color-surface-elevated)] border border-neon-orange/20">
-          <div className="text-2xl font-heading font-bold text-neon-orange" style={{ fontFamily: 'Orbitron, Rajdhani, sans-serif' }}>↑ 28%</div>
-          <div className="text-sm text-[var(--color-text-muted)]">Возврат игроков</div>
-        </div>
-      </div>
-    ),
-  },
-  analytics: {
-    paragraph: 'Здесь будет текст для блока «Аналитика по спинам (club_id)». Отслеживайте спины по клубу, конверсии и активность игроков в одном месте.',
-  },
-  prizes: {
-    paragraph: 'Здесь будет текст для блока «Настройка призового фонда». Гибко настраивайте призы, веса и лимиты под экономику вашего клуба.',
-  },
-  retention: {
-    paragraph: 'Здесь будет текст для блока «Удержание аудитории». Сегментируйте игроков, стройте воронки и повышайте возвращаемость.',
-  },
-}
+type PrizeId = (typeof PRIZES)[number]['id']
 
 export default function ForClubOwners() {
   const { openCTAModal } = useCTAModal()
-  const [selectedId, setSelectedId] = useState<FeatureId>('economy')
-  const content = FEATURE_CONTENT[selectedId]
+  const [selectedId, setSelectedId] = useState<PrizeId>('balance')
+  const selected = PRIZES.find((p) => p.id === selectedId) ?? PRIZES[0]
 
   return (
     <section id="for-club-owners" className="relative py-24 px-4 sm:px-6 lg:px-8 bg-[var(--color-surface)]">
       <div className="max-w-[var(--container-max)] mx-auto">
+        <motion.h2
+          className="font-heading font-bold text-3xl sm:text-4xl text-white text-center mb-12"
+          style={{ fontFamily: 'Orbitron, Rajdhani, sans-serif' }}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+        >
+          Какие бывают призы
+        </motion.h2>
+
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          {/* Слева — фото выбранного приза */}
           <motion.div
-            className="space-y-6"
+            className="space-y-4"
             initial={{ opacity: 0, x: -24 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <h2 className="font-heading font-bold text-3xl sm:text-4xl text-white" style={{ fontFamily: 'Orbitron, Rajdhani, sans-serif' }}>
-              Для владельцев
-            </h2>
             <AnimatePresence mode="wait">
               <motion.div
                 key={selectedId}
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
                 transition={{ duration: 0.2 }}
-                className="space-y-6"
+                className="rounded-xl overflow-hidden border border-[var(--color-border)] aspect-[16/10] max-h-[280px] sm:max-h-[340px]"
               >
-                <p className="text-[var(--color-text-muted)] text-lg">
-                  {content.paragraph}
-                </p>
-                {content.extra}
+                <img
+                  src={selected.image}
+                  alt={selected.title}
+                  className="w-full h-full object-cover"
+                />
               </motion.div>
             </AnimatePresence>
+            <p className="text-[var(--color-text-muted)] text-sm text-center lg:text-left">
+              Набор призов и вероятности настраиваются админом платформы.
+            </p>
           </motion.div>
 
+          {/* Справа — блоки по названию призов */}
           <motion.div
             className="space-y-4"
             initial={{ opacity: 0, x: 24 }}
@@ -83,21 +74,19 @@ export default function ForClubOwners() {
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            {FEATURES.map((f) => (
+            {PRIZES.map((p) => (
               <button
                 type="button"
-                key={f.id}
-                onClick={() => setSelectedId(f.id)}
-                className={`w-full flex items-center gap-4 p-4 rounded-xl bg-[var(--color-surface-elevated)] border text-left transition-colors cursor-pointer ${
-                  selectedId === f.id
+                key={p.id}
+                onClick={() => setSelectedId(p.id)}
+                className={`w-full flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 p-4 rounded-xl bg-[var(--color-surface-elevated)] border text-left transition-colors cursor-pointer ${
+                  selectedId === p.id
                     ? 'border-neon-cyan bg-neon-cyan/5'
                     : 'border-[var(--color-border)] hover:border-neon-cyan/30'
                 }`}
               >
-                <div className="w-10 h-10 rounded-lg bg-neon-cyan/10 flex items-center justify-center flex-shrink-0">
-                  <f.Icon className="w-5 h-5 text-neon-cyan" />
-                </div>
-                <span className="font-medium text-[var(--color-text)]">{f.title}</span>
+                <span className="font-semibold text-[var(--color-text)]">{p.title}</span>
+                <span className="text-sm text-[var(--color-text-muted)]">{p.description}</span>
               </button>
             ))}
             <motion.button

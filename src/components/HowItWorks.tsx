@@ -1,37 +1,25 @@
 import { motion } from 'framer-motion'
-import { QrCode, Wallet, RotateCw, Gift } from 'lucide-react'
+import { QrCode, Wallet, RotateCw } from 'lucide-react'
 
 const STEPS = [
   {
     number: 1,
-    title: 'Регистрация',
-    description: 'QR-код на стойке',
+    title: 'Регистрируешься',
+    description: 'Создаёшь аккаунт за 30 секунд.',
     Icon: QrCode,
   },
   {
     number: 2,
-    title: 'Пополнение баланса',
-    description: 'Баллы за время в клубе',
+    title: 'Играешь и пополняешь баланс',
+    description: 'За активность или покупки получаешь бонусы/баллы (как в любой системе лояльности).',
     Icon: Wallet,
   },
   {
     number: 3,
-    title: 'Крути рулетку',
-    description: 'На экране рецепшна в реальном времени',
+    title: 'Крутишь рулетку и получаешь приз',
+    description: 'Выигрываешь: бонусные тенге на баланс, бесплатные часы, скидки, призы/скины (если подключены).',
     Icon: RotateCw,
   },
-  {
-    number: 4,
-    title: 'Получай приз',
-    description: 'Скидки, часы, бонусы',
-    Icon: Gift,
-  },
-]
-
-const PRIZE_TYPES = [
-  { label: 'Скидки', value: 35, color: 'bg-neon-cyan' },
-  { label: 'Бонус-часы', value: 45, color: 'bg-neon-orange' },
-  { label: 'Денежные бонусы', value: 20, color: 'bg-white' },
 ]
 
 const container = {
@@ -59,11 +47,20 @@ export default function HowItWorks() {
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          Как это работает
+          Как это работает 
         </motion.h2>
+        <motion.p
+          className="text-[var(--color-text-muted)] text-center text-lg mb-12"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.05 }}
+        >
+          Для игрока — 3 шага
+        </motion.p>
 
         <motion.div
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-6 mb-20"
+          className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-6 mb-10"
           variants={container}
           initial="hidden"
           whileInView="visible"
@@ -90,34 +87,15 @@ export default function HowItWorks() {
           ))}
         </motion.div>
 
-        <motion.div
-          className="grid grid-cols-1 sm:grid-cols-3 gap-6"
-          initial={{ opacity: 0, y: 24 }}
+        <motion.p
+          className="text-[var(--color-text-muted)] text-center text-sm max-w-xl mx-auto"
+          initial={{ opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          {PRIZE_TYPES.map((prize) => (
-            <div
-              key={prize.label}
-              className="bg-[var(--color-surface-elevated)] rounded-xl p-6 border border-[var(--color-border)]"
-            >
-              <div className="flex justify-between text-sm mb-2">
-                <span className="text-[var(--color-text)] font-medium">{prize.label}</span>
-                <span className="text-[var(--color-text-muted)]">{prize.value}%</span>
-              </div>
-              <div className="h-2 bg-[var(--color-surface)] rounded-full overflow-hidden">
-                <motion.div
-                  className={`h-full rounded-full ${prize.color}`}
-                  initial={{ width: 0 }}
-                  whileInView={{ width: `${prize.value}%` }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 1, delay: 0.3 }}
-                />
-              </div>
-            </div>
-          ))}
-        </motion.div>
+          Призы используются внутри клубов. Никаких «выводов на карту».
+        </motion.p>
       </div>
     </section>
   )

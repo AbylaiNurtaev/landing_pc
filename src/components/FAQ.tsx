@@ -12,26 +12,23 @@ const FAQ_DATA: FAQItem[] = [
   {
     id: '1',
     question: 'Это казино?',
-    answer:
-      'Нет. SpinClub — это программа лояльности, встроенная в экосистему компьютерного клуба. Игроки не вносят деньги ради выигрыша — они получают баллы за время, проведённое в клубе, и тратят их на кручение рулетки. Все призы действуют исключительно внутри заведения. Это ближе к «счастливому часу» в кафе, чем к азартной игре.',
+    answer: 'Нет. Это программа лояльности. Деньги не выводятся, только бонусы и призы внутри клубов.',
   },
   {
     id: '2',
-    question: 'Можно ли вывести деньги?',
-    answer:
-      'Нет. Призы не конвертируются в реальные деньги и не переводятся на карту. Выигрыш — это скидка на следующий сеанс, бонусные часы или внутриклубные бонусы. Всё остаётся внутри клуба, что исключает финансовые риски для обеих сторон.',
+    question: 'Можно вывести деньги?',
+    answer: 'Нет. Можно только тратить бонусы/призы по правилам системы.',
   },
   {
     id: '3',
-    question: 'Законно ли это?',
-    answer:
-      'Да. Механика полностью соответствует российскому законодательству: призы носят маркетинговый характер, денежный эквивалент не выплачивается, участие бесплатно для игрока (баллы — это не ставка). Платформа работает как инструмент удержания клиентов, а не как организатор азартных игр.',
+    question: 'Как я получаю баллы?',
+    answer: 'За активность: посещения, пополнения, покупки — зависит от настроек акции.',
   },
   {
     id: '4',
-    question: 'Как формируется призовой фонд?',
+    question: 'Клуб может настроить правила?',
     answer:
-      'Каждый клуб самостоятельно настраивает состав призов, их вероятности и суточные лимиты через административную панель. Владелец видит, сколько призов выдано, на какую сумму, и в любой момент может скорректировать экономику. Система не позволяет клубу уйти в минус — суммирование скидок ограничено, а крупные призы имеют жёсткий дневной лимит.',
+      'Да. Лимиты, призы, вероятности и правила оплаты бонусами настраиваются.',
   },
 ]
 
@@ -42,14 +39,22 @@ export default function FAQ() {
     <section id="faq" className="relative py-24 px-4 sm:px-6 lg:px-8 bg-[var(--color-surface)]">
       <div className="max-w-2xl mx-auto">
         <motion.h2
-          className="font-heading font-bold text-3xl sm:text-4xl text-white text-center mb-12"
+          className="font-heading font-bold text-3xl sm:text-4xl text-white text-center mb-2"
           style={{ fontFamily: 'Orbitron, Rajdhani, sans-serif' }}
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          Частые вопросы
+          FAQ
         </motion.h2>
+        <motion.p
+          className="text-center text-[var(--color-text-muted)] text-sm mb-12"
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+        >
+          Простыми словами
+        </motion.p>
 
         <div className="space-y-3">
           {FAQ_DATA.map((item) => (
@@ -83,7 +88,7 @@ export default function FAQ() {
                     transition={{ duration: 0.3, ease: 'easeInOut' }}
                     className="overflow-hidden"
                   >
-                    <div className="px-5 pb-5 pt-0 text-[var(--color-text-muted)] text-sm border-t border-[var(--color-border)] pt-4 -mt-1">
+                    <div className="px-5 pb-5 pt-4 text-[var(--color-text-muted)] text-sm border-t border-[var(--color-border)] -mt-1">
                       {item.answer}
                     </div>
                   </motion.div>

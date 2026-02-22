@@ -152,6 +152,14 @@ export default function CTAForm() {
   return (
     <section id="cta" className="relative py-24 px-4 sm:px-6 lg:px-8">
       <div className="max-w-xl mx-auto">
+        <motion.p
+          className="text-center text-neon-cyan font-medium text-sm uppercase tracking-wider mb-3"
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+        >
+          Игрокам
+        </motion.p>
         <motion.h2
           className="font-heading font-bold text-3xl sm:text-4xl text-white text-center mb-10"
           style={{ fontFamily: 'Orbitron, Rajdhani, sans-serif' }}

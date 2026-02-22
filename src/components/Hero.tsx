@@ -27,13 +27,13 @@ export default function Hero() {
       <div className="relative z-10 flex flex-col items-center px-4 sm:px-6 lg:px-8 pt-24 pb-10 shrink-0">
         <div className="w-full max-w-xl lg:max-w-none lg:px-4 text-center">
           <motion.h1
-            className="font-heading font-bold text-4xl sm:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl lg:tracking-tight text-white leading-tight mb-6 md:mt-[100px]"
+            className="font-heading font-bold text-4xl sm:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl lg:tracking-tight text-white leading-tight mb-6 md:mt-[50px]"
             style={{ fontFamily: 'Orbitron, Rajdhani, sans-serif' }}
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: 'easeOut' }}
           >
-            Лояльность, которая крутится
+            Рулетка бонусов для компьютерных клубов
           </motion.h1>
           <motion.p
             className="text-lg sm:text-xl text-[var(--color-text-muted)] max-w-lg mx-auto"
@@ -41,7 +41,7 @@ export default function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.15, ease: 'easeOut' }}
           >
-            Рулетка для компьютерных клубов — награждай игроков, управляй экономикой
+            Играй в клубе — получай бонусы — крути рулетку — забирай призы
           </motion.p>
         </div>
       </div>
