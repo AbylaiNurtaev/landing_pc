@@ -1,0 +1,83 @@
+/* Оверлей выигрыша на лендинге (стили как в ClubRoulettePage) */
+.landing-roulette-result {
+  --theme-bg: #0f0f14;
+  --theme-primary: var(--color-neon-cyan, #00f5ff);
+  --theme-primary-rgb: 0, 245, 255;
+  --theme-text: rgba(224, 224, 240, 0.95);
+}
+
+.landing-roulette-result .roulette-result-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.88);
+  backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  animation: overlayFade 0.4s ease;
+}
+
+@keyframes overlayFade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.landing-roulette-result .roulette-result-content {
+  text-align: center;
+  padding: 48px 56px;
+  background: rgba(26, 26, 46, 0.98);
+  border-radius: 24px;
+  border: 2px solid var(--theme-primary);
+  box-shadow: 0 8px 40px rgba(var(--theme-primary-rgb), 0.3);
+  max-width: 420px;
+  animation: resultPop 0.5s ease;
+}
+
+@keyframes resultPop {
+  from { transform: scale(0.85); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.landing-roulette-result .roulette-result-title {
+  font-size: 36px;
+  color: var(--theme-primary);
+  margin: 0 0 24px 0;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-weight: 700;
+}
+
+.landing-roulette-result .roulette-result-prize {
+  padding: 24px;
+  background: rgba(10, 10, 15, 0.6);
+  border-radius: 16px;
+  border: 1px solid rgba(var(--theme-primary-rgb), 0.3);
+}
+
+.landing-roulette-result .roulette-result-name {
+  font-size: 26px;
+  color: var(--theme-primary);
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.landing-roulette-result .roulette-result-desc {
+  font-size: 15px;
+  color: var(--theme-text);
+}
+
+@media (max-width: 500px) {
+  .landing-roulette-result .roulette-result-content {
+    padding: 32px 24px;
+    margin: 16px;
+  }
+
+  .landing-roulette-result .roulette-result-title {
+    font-size: 28px;
+  }
+
+  .landing-roulette-result .roulette-result-name {
+    font-size: 20px;
+  }
+}

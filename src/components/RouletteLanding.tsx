@@ -19,23 +19,25 @@ const IDLE_SPEED_PX = 15.5
 const ROULETTE_MIN_COPIES = 50
 const ROULETTE_REPLENISH_THRESHOLD = 25
 const ROULETTE_REPLENISH_COUNT = 25
+const SPIN_DURATION_MS = 4000
+const SPIN_EASE_OUT = (t: number) => 1 - Math.pow(1 - t, 3)
 
 // ——— Демо-призы из assets ———
-interface DemoPrize {
+export interface DemoPrize {
   id: string
   name: string
   slotIndex: number
   probability: number
   image: string
 }
-const DEMO_PRIZES: DemoPrize[] = [
-  { id: '1', name: 'Приз 1', slotIndex: 0, probability: 0.03, image: priz1 },
-  { id: '2', name: 'Приз 2', slotIndex: 1, probability: 0.05, image: priz2 },
-  { id: '3', name: 'Приз 3', slotIndex: 2, probability: 0.08, image: priz3 },
-  { id: '5', name: 'Приз 5', slotIndex: 3, probability: 0.12, image: prize5 },
-  { id: '6', name: 'Приз 6', slotIndex: 4, probability: 0.15, image: priz6 },
-  { id: '7', name: 'Приз 7', slotIndex: 5, probability: 0.18, image: priz7 },
-  { id: '8', name: 'Приз 8', slotIndex: 6, probability: 0.2, image: priz8 },
+export const DEMO_PRIZES: DemoPrize[] = [
+  { id: '1', name: 'Snickers Шоколад', slotIndex: 0, probability: 0.03, image: priz1 },
+  { id: '2', name: 'Lavina Энергетик', slotIndex: 1, probability: 0.05, image: priz2 },
+  { id: '3', name: 'Рукав киберспортивный', slotIndex: 2, probability: 0.08, image: priz3 },
+  { id: '5', name: 'CS:GO 2 - Скин Нож', slotIndex: 3, probability: 0.12, image: prize5 },
+  { id: '6', name: '10.000 Бонусов', slotIndex: 4, probability: 0.15, image: priz6 },
+  { id: '7', name: '2000 Бонусов', slotIndex: 5, probability: 0.18, image: priz7 },
+  { id: '8', name: 'AVA Лимонад', slotIndex: 6, probability: 0.2, image: priz8 },
 ]
 
 type PrizeTier = 'red' | 'purple' | 'green' | 'blue' | 'gray'
@@ -203,7 +205,12 @@ const LANDING_ROULETTE_CSS = `
 }
 `
 
-export default function RouletteLanding() {
+interface RouletteLandingProps {
+  triggerSpinCount?: number
+  onSpinComplete?: (prize: DemoPrize) => void
+}
+
+export default function RouletteLanding({ triggerSpinCount = 0, onSpinComplete }: RouletteLandingProps) {
   const [roulettePrizes] = useState(DEMO_PRIZES)
   const [rouletteCopies, setRouletteCopies] = useState(ROULETTE_MIN_COPIES)
   const [scrollPosition, setScrollPosition] = useState(0)
@@ -213,11 +220,15 @@ export default function RouletteLanding() {
   const idleRafRef = useRef<number | null>(null)
   const rouletteCopiesRef = useRef(ROULETTE_MIN_COPIES)
   const roulettePrizesRef = useRef(roulettePrizes)
+  const isSpinningRef = useRef(false)
+  const scrollPositionRef = useRef(0)
+  const lastTriggerRef = useRef(0)
 
   rouletteCopiesRef.current = rouletteCopies
   roulettePrizesRef.current = roulettePrizes
+  scrollPositionRef.current = scrollPosition
 
-  // Бесконечное медленное движение ленты (idle)
+  // Бесконечное медленное движение ленты (idle), пауза во время спина
   useEffect(() => {
     const prizes = roulettePrizesRef.current
     if (prizes.length === 0) return
@@ -226,6 +237,10 @@ export default function RouletteLanding() {
     let lastTime = performance.now()
 
     const tick = () => {
+      if (isSpinningRef.current) {
+        idleRafRef.current = requestAnimationFrame(tick)
+        return
+      }
       const now = performance.now()
       const dt = Math.min((now - lastTime) / 16, 50)
       lastTime = now
@@ -240,6 +255,7 @@ export default function RouletteLanding() {
         rouletteCopiesRef.current = copies + ROULETTE_REPLENISH_COUNT
         setRouletteCopies(rouletteCopiesRef.current)
       }
+      scrollPositionRef.current = idlePositionRef.current
       setScrollPosition(idlePositionRef.current)
       idleRafRef.current = requestAnimationFrame(tick)
     }
@@ -248,6 +264,50 @@ export default function RouletteLanding() {
       if (idleRafRef.current != null) cancelAnimationFrame(idleRafRef.current)
     }
   }, [roulettePrizes.length])
+
+  // Спин по триггеру: разгон ленты и остановка на случайном призе
+  useEffect(() => {
+    if (triggerSpinCount <= 0 || triggerSpinCount === lastTriggerRef.current || !onSpinComplete) return
+    lastTriggerRef.current = triggerSpinCount
+    const prizes = roulettePrizesRef.current
+    if (prizes.length === 0) return
+
+    const container = rouletteRef.current
+    const containerWidth = container?.offsetWidth ?? 800
+    const oneSetWidth = prizes.length * PRIZE_WIDTH
+    const randomIndex = Math.floor(Math.random() * prizes.length)
+    const paddingLeft = 20
+    const targetScroll =
+      containerWidth / 2 -
+      paddingLeft -
+      PRIZE_WIDTH / 2 -
+      randomIndex * PRIZE_WIDTH -
+      oneSetWidth
+
+    isSpinningRef.current = true
+    const startScroll = scrollPositionRef.current
+    const startTime = performance.now()
+    let spinRaf: number
+
+    const animate = () => {
+      const elapsed = performance.now() - startTime
+      const t = Math.min(1, elapsed / SPIN_DURATION_MS)
+      const eased = SPIN_EASE_OUT(t)
+      const current = startScroll + (targetScroll - startScroll) * eased
+      scrollPositionRef.current = current
+      setScrollPosition(current)
+
+      if (t < 1) {
+        spinRaf = requestAnimationFrame(animate)
+      } else {
+        isSpinningRef.current = false
+        idlePositionRef.current = targetScroll
+        onSpinComplete(prizes[randomIndex])
+      }
+    }
+    spinRaf = requestAnimationFrame(animate)
+    return () => cancelAnimationFrame(spinRaf)
+  }, [triggerSpinCount, onSpinComplete])
 
   return (
     <>

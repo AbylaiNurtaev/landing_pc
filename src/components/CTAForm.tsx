@@ -9,7 +9,8 @@ export interface FormData {
   email: string
 }
 
-const phoneRegex = /^(\+7|8)?[\s-]?\(?[489][0-9]{2}\)?[\s-]?[0-9]{3}[\s-]?[0-9]{2}[\s-]?[0-9]{2}$/
+// Казахстан: +7 7XX XXX-XX-XX (мобильные коды 700, 701, 705, 707, 747, 771 и т.д.)
+const phoneRegex = /^(\+7|8)?[\s-]?\(?7[0-9]{2}\)?[\s-]?[0-9]{3}[\s-]?[0-9]{2}[\s-]?[0-9]{2}$/
 
 type CTAFormContentProps = {
   onSuccess?: () => void
@@ -104,7 +105,7 @@ export function CTAFormContent({ onSuccess, idPrefix = '', className = '' }: CTA
                 pattern: { value: phoneRegex, message: 'Введите корректный номер' },
               })}
               className="w-full px-4 py-3 rounded-lg bg-[var(--color-surface)] border border-[var(--color-border)] text-[var(--color-text)] placeholder-[var(--color-text-muted)] focus:border-neon-cyan focus:outline-none focus:ring-1 focus:ring-neon-cyan"
-              placeholder="+7 (999) 123-45-67"
+              placeholder="+7 (701) 123-45-67"
             />
             {errors.phone && (
               <p className="mt-1 text-sm text-neon-orange">{errors.phone.message}</p>
