@@ -5,7 +5,7 @@ const STEPS = [
   {
     number: 1,
     title: 'Регистрируешься',
-    description: 'Создаёшь аккаунт за 30 секунд.',
+    description: 'Создаёшь аккаунт за 30 секунд, используя нашего телеграм бота.',
     Icon: QrCode,
   },
   {
@@ -16,8 +16,8 @@ const STEPS = [
   },
   {
     number: 3,
-    title: 'Крутишь рулетку и получаешь приз',
-    description: 'Выигрываешь: бонусные тенге на баланс, бесплатные часы, скидки, призы/скины (если подключены).',
+    title: 'Крути рулетку и получи приз',
+    description: 'Выигрываешь: бонусные тенге на баланс, бесплатные часы, скидки, призы/скины',
     Icon: RotateCw,
   },
 ]
@@ -38,7 +38,7 @@ const item = {
 export default function HowItWorks() {
   return (
     <section id="how-it-works" className="relative py-24 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-[var(--container-max)] mx-auto">
+      <div className="max-w-[var(--container-max)] lg:max-w-5xl mx-auto">
         <motion.h2
           className="font-heading font-bold text-3xl sm:text-4xl text-white text-center mb-16"
           style={{ fontFamily: 'Orbitron, Rajdhani, sans-serif' }}
@@ -60,7 +60,7 @@ export default function HowItWorks() {
         </motion.p>
 
         <motion.div
-          className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-6 mb-10"
+          className="grid grid-cols-1 md:grid-cols-3 gap-10 lg:gap-10 mb-10"
           variants={container}
           initial="hidden"
           whileInView="visible"

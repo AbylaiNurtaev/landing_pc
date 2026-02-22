@@ -36,7 +36,7 @@ export default function Hero() {
             Рулетка бонусов для компьютерных клубов
           </motion.h1>
           <motion.p
-            className="text-lg sm:text-xl text-[var(--color-text-muted)] max-w-lg mx-auto"
+            className="text-lg sm:text-xl lg:text-base text-[var(--color-text-muted)] max-w-lg lg:max-w-none mx-auto lg:whitespace-nowrap"
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.15, ease: 'easeOut' }}
