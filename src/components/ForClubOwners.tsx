@@ -6,6 +6,7 @@ import prize5 from '../assets/prize5.png'
 import priz6 from '../assets/priz6.png'
 import plus1hour from '../assets/+1hour.png'
 import sale from '../assets/sale.png'
+import group2900 from '../assets/Group 2900.png'
 
 const PRIZES = [
   { id: 'balance', title: 'Бонусы на баланс', description: 'Можно оплатить часть игры.', image: priz6 },
@@ -13,6 +14,7 @@ const PRIZES = [
   { id: 'discounts', title: 'Скидки', description: 'Растут от активности (чем больше играешь, тем выгоднее).', image: sale },
   { id: 'digital', title: 'Digital-призы', description: 'Промо, скины, подписки (если включено).', image: prize5 },
   { id: 'rare', title: 'Редкие призы', description: 'Лимитированные награды (редко, но приятно).', image: priz3 },
+  { id: 'clubs', title: 'Для компьютерных клубов', description: 'Все виды призов в одном месте.', image: group2900 },
 ] as const
 
 type PrizeId = (typeof PRIZES)[number]['id']
