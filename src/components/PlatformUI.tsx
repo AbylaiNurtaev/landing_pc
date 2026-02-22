@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 
-const YOUTUBE_VIDEO_ID = 'saDgG7Piurk'
+const YOUTUBE_VIDEO_ID = 'Ol_1aTlG9O8'
 
 export default function PlatformUI() {
   return (
