@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useCTAModal } from '../context/CTAModalContext'
+import { ChevronDown } from 'lucide-react'
 import priz3 from '../assets/priz3.jpg'
 import prize5 from '../assets/prize5.png'
 import priz6 from '../assets/priz6.png'
@@ -22,6 +23,7 @@ type PrizeId = (typeof PRIZES)[number]['id']
 export default function ForClubOwners() {
   const { openCTAModal } = useCTAModal()
   const [selectedId, setSelectedId] = useState<PrizeId>('balance')
+  const [openId, setOpenId] = useState<PrizeId | null>(null)
   const selected = PRIZES.find((p) => p.id === selectedId) ?? PRIZES[0]
 
   return (
@@ -38,7 +40,69 @@ export default function ForClubOwners() {
           Какие бывают призы
         </motion.h2>
 
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        {/* Мобильная версия: раскрывающиеся блоки как в FAQ */}
+        <div className="lg:hidden space-y-3">
+          {PRIZES.map((p) => (
+            <motion.div
+              key={p.id}
+              className="rounded-xl bg-[var(--color-surface-elevated)] border border-[var(--color-border)] overflow-hidden"
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
+              <button
+                type="button"
+                onClick={() => setOpenId(openId === p.id ? null : p.id)}
+                className="w-full flex items-center justify-between gap-3 p-4 text-left hover:bg-white/[0.02] transition-colors"
+              >
+                <div className="flex flex-col gap-0.5 text-left min-w-0">
+                  <span className="font-semibold text-[var(--color-text)]">{p.title}</span>
+                  <span className="text-sm text-[var(--color-text-muted)]">{p.description}</span>
+                </div>
+                <motion.span
+                  animate={{ rotate: openId === p.id ? 180 : 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="flex-shrink-0 text-neon-cyan"
+                >
+                  <ChevronDown className="w-5 h-5" />
+                </motion.span>
+              </button>
+              <AnimatePresence initial={false}>
+                {openId === p.id && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.3, ease: 'easeInOut' }}
+                    className="overflow-hidden"
+                  >
+                    <div className="px-4 pb-4 pt-0 border-t border-[var(--color-border)]">
+                      <div className="rounded-lg overflow-hidden border border-[var(--color-border)] aspect-[16/10] max-h-[220px] mt-3">
+                        <img
+                          src={p.image}
+                          alt={p.title}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
+          ))}
+          <motion.button
+            type="button"
+            onClick={openCTAModal}
+            className="w-full mt-6 py-4 rounded-xl font-semibold text-graphite bg-neon-cyan hover:bg-[#00dde6] transition-colors shadow-[0_0_25px_rgba(0,245,255,0.4)]"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            Оставить заявку
+          </motion.button>
+        </div>
+
+        {/* Десктоп: сетка — слева фото, справа список (без изменений) */}
+        <div className="hidden lg:grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Слева — фото выбранного приза */}
           <motion.div
             className="space-y-4"

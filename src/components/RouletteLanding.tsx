@@ -3,6 +3,10 @@
  * Всё в одном файле: логика, демо-призы, стили. Рулетка просто крутится (idle).
  */
 import { useState, useEffect, useRef } from 'react'
+import comp1 from '../assets/comp1.png'
+import comp2 from '../assets/comp2.png'
+import comp3 from '../assets/comp3.png'
+import group2900 from '../assets/Group 2900.png'
 import priz1 from '../assets/priz1.jpg'
 import priz2 from '../assets/priz2.jpg'
 import priz3 from '../assets/priz3.jpg'
@@ -30,14 +34,21 @@ export interface DemoPrize {
   probability: number
   image: string
 }
+// Призы, которые могут выпасть при спине (остальные только в ленте для вида)
+export const WINNABLE_PRIZE_IDS = ['headphones', 'mouse', 'mat', 'keyboard'] as const
+
 export const DEMO_PRIZES: DemoPrize[] = [
   { id: '1', name: 'Snickers Шоколад', slotIndex: 0, probability: 0.03, image: priz1 },
-  { id: '2', name: 'Lavina Энергетик', slotIndex: 1, probability: 0.05, image: priz2 },
-  { id: '3', name: 'Рукав киберспортивный', slotIndex: 2, probability: 0.08, image: priz3 },
-  { id: '5', name: 'CS:GO 2 - Скин Нож', slotIndex: 3, probability: 0.12, image: prize5 },
-  { id: '6', name: '10.000 Бонусов', slotIndex: 4, probability: 0.15, image: priz6 },
-  { id: '7', name: '2000 Бонусов', slotIndex: 5, probability: 0.18, image: priz7 },
-  { id: '8', name: 'AVA Лимонад', slotIndex: 6, probability: 0.2, image: priz8 },
+  { id: 'headphones', name: 'Наушники для компьютерного клуба', slotIndex: 1, probability: 0.25, image: comp1 },
+  { id: '2', name: 'Lavina Энергетик', slotIndex: 2, probability: 0.05, image: priz2 },
+  { id: 'mouse', name: 'Мышка для компьютерного клуба', slotIndex: 3, probability: 0.25, image: group2900 },
+  { id: '3', name: 'Рукав киберспортивный', slotIndex: 4, probability: 0.08, image: priz3 },
+  { id: 'mat', name: 'Коврик для компьютерного клуба', slotIndex: 5, probability: 0.25, image: comp2 },
+  { id: '5', name: 'CS:GO 2 - Скин Нож', slotIndex: 6, probability: 0.12, image: prize5 },
+  { id: 'keyboard', name: 'Клавиатура для компьютерного клуба', slotIndex: 7, probability: 0.25, image: comp3 },
+  { id: '6', name: '10.000 Бонусов', slotIndex: 8, probability: 0.15, image: priz6 },
+  { id: '7', name: '2000 Бонусов', slotIndex: 9, probability: 0.18, image: priz7 },
+  { id: '8', name: 'AVA Лимонад', slotIndex: 10, probability: 0.2, image: priz8 },
 ]
 
 type PrizeTier = 'red' | 'purple' | 'green' | 'blue' | 'gray'
@@ -265,17 +276,21 @@ export default function RouletteLanding({ triggerSpinCount = 0, onSpinComplete }
     }
   }, [roulettePrizes.length])
 
-  // Спин по триггеру: разгон ленты и остановка на случайном призе
+  // Спин по триггеру: разгон ленты и остановка на одном из призов (выпадать могут только призы из WINNABLE_PRIZE_IDS)
   useEffect(() => {
     if (triggerSpinCount <= 0 || triggerSpinCount === lastTriggerRef.current || !onSpinComplete) return
     lastTriggerRef.current = triggerSpinCount
     const prizes = roulettePrizesRef.current
     if (prizes.length === 0) return
 
+    const winnableIndices = prizes
+      .map((p, i) => (WINNABLE_PRIZE_IDS.includes(p.id as (typeof WINNABLE_PRIZE_IDS)[number]) ? i : -1))
+      .filter((i) => i >= 0)
+    const randomIndex = winnableIndices[Math.floor(Math.random() * winnableIndices.length)]
+
     const container = rouletteRef.current
     const containerWidth = container?.offsetWidth ?? 800
     const oneSetWidth = prizes.length * PRIZE_WIDTH
-    const randomIndex = Math.floor(Math.random() * prizes.length)
     const paddingLeft = 20
     const targetScroll =
       containerWidth / 2 -

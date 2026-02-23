@@ -12,7 +12,7 @@ export default function Footer() {
           </span>
         </div>
         <p className="text-[var(--color-text-muted)] text-sm">
-          © 2025 SpinClub. Все права защищены.
+          © 2026 SpinClub. Все права защищены.
         </p>
         <div className="flex gap-6 text-sm">
           <a href="#" className="text-[var(--color-text-muted)] hover:text-neon-cyan transition-colors">

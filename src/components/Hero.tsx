@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import RouletteStandalone from './RouletteStandalone'
-import { DEMO_PRIZES } from './RouletteLanding'
+import { DEMO_PRIZES, WINNABLE_PRIZE_IDS } from './RouletteLanding'
 
 export default function Hero() {
   const [spinTrigger, setSpinTrigger] = useState(0)
@@ -55,6 +55,7 @@ export default function Hero() {
       >
         <RouletteStandalone
           prizes={DEMO_PRIZES}
+          winnablePrizeIds={[...WINNABLE_PRIZE_IDS]}
           triggerSpinCount={spinTrigger}
           onSpinComplete={() => {}}
         />

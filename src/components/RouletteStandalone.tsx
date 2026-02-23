@@ -338,6 +338,8 @@ export interface RouletteStandaloneProps {
   triggerSpinCount?: number;
   /** Колбэк по окончании спина — передаётся выпавший приз */
   onSpinComplete?: (prize: StandalonePrize) => void;
+  /** Если задан — выпадать может только приз с id из этого списка (остальные только в ленте) */
+  winnablePrizeIds?: string[];
   /** Демо-призы по id (если нужны картинки по умолчанию без внешних импортов) */
   demoPrizeIds?: string[];
   /** URL картинок для демо по порядку (длина = demoPrizeIds или 7) */
@@ -355,6 +357,7 @@ export default function RouletteStandalone({
   prizes: propsPrizes,
   triggerSpinCount = 0,
   onSpinComplete,
+  winnablePrizeIds,
   demoPrizeIds = DEFAULT_DEMO_IDS,
   demoPrizeImageUrls = [],
 }: RouletteStandaloneProps) {
@@ -468,10 +471,15 @@ export default function RouletteStandalone({
     const list = prizesRef.current;
     if (list.length === 0) return;
 
-    const randomIndex = Math.floor(Math.random() * list.length);
-    const prize = list[randomIndex];
+    const winnableIds = winnablePrizeIds && winnablePrizeIds.length > 0 ? new Set(winnablePrizeIds) : null;
+    const pool = winnableIds
+      ? list.filter((p) => winnableIds.has(p.id))
+      : list;
+    if (pool.length === 0) return;
+
+    const prize = pool[Math.floor(Math.random() * pool.length)];
     startSpin(prize, () => onSpinComplete(prize));
-  }, [triggerSpinCount, onSpinComplete]);
+  }, [triggerSpinCount, onSpinComplete, winnablePrizeIds]);
 
   const startSpin = (prize: StandalonePrize, onComplete?: () => void) => {
     if (isSpinningRef.current || !rouletteRef.current) return;
